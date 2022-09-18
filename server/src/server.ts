@@ -28,10 +28,9 @@ app.get("/games",  async (req, res) => {
 app.post("/games/:id/ads", async (req, res) => {
     const gameId = req.params.id;
     const body = req.body;
-    const id = "1"
-    const ad = await prisma.ad.create({
+    try{const ad = await prisma.ad.create({
         data:{
-            id,
+            id: 'uuid()',
             gameId,
             name: body.name,
             yearsPlaying: body.yearsPlaying,
@@ -41,8 +40,14 @@ app.post("/games/:id/ads", async (req, res) => {
             hourEnd: convertHourstringToMinutes(body.hourEnd),
             useVoiceChannel: body.useVoiceChannel,
         }
+        
     })
+    console.log(ad)
     return res.status(201).json(ad);
+}catch(error){
+    console.log(error)
+    return res.send(error)
+}
 });
 app.get("/games/:id/ads", async (req, res) => {
    const gameId = req.params.id
